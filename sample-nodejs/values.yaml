@@ -1,9 +1,9 @@
 replicaCount: 2
 
 image:
-  repository: <your-dockerhub-username>/sample-nodejs   # נעדכן בהמשך כשיהיה registry אמיתי
+  repository: itamara/sample-nodejs   
   pullPolicy: IfNotPresent
-  tag: "latest"   # ב-CI/CD אמיתי זה יוחלף ב-SHA/גרסה ספציפית - "latest" זמני בלבד
+  tag: "latest"   
 
 imagePullSecrets: []
 nameOverride: ""
@@ -28,7 +28,7 @@ securityContext:
   capabilities:
     drop:
       - ALL
-  readOnlyRootFilesystem: false   # false כי Express/npm לפעמים כותב זמנית; אפשר להדק בהמשך
+  readOnlyRootFilesystem: false   
   runAsNonRoot: true
 
 service:
