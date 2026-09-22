@@ -1,0 +1,99 @@
+replicaCount: 2
+
+image:
+  repository: <your-dockerhub-username>/sample-nodejs   # נעדכן בהמשך כשיהיה registry אמיתי
+  pullPolicy: IfNotPresent
+  tag: "latest"   # ב-CI/CD אמיתי זה יוחלף ב-SHA/גרסה ספציפית - "latest" זמני בלבד
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false   # false כי Express/npm לפעמים כותב זמנית; אפשר להדק בהמשך
+  runAsNonRoot: true
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: sample-nodejs.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+livenessProbe:
+  httpGet:
+    path: /live
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+env:
+  - name: PORT
+    value: "8080"
+
+configMap:
+  enabled: true
+  data:
+    LOG_LEVEL: "info"
+    APP_ENV: "production"
+
+secret:
+  enabled: true
+  data:
+    API_KEY: "demo-api-key-12345"
