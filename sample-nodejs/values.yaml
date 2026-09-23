@@ -3,7 +3,7 @@ replicaCount: 2
 image:
   repository: itamara/sample-nodejs
   pullPolicy: IfNotPresent
-  tag: "0.0.4"
+  tag: "0.0.5"
 
 imagePullSecrets:
   - name: dockerhub-creds
