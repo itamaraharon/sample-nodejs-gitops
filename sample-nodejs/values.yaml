@@ -1,11 +1,12 @@
 replicaCount: 2
 
 image:
-  repository: itamara/sample-nodejs   
+  repository: itamara/sample-nodejs
   pullPolicy: IfNotPresent
   tag: "0.0.4"
 
-imagePullSecrets: []
+imagePullSecrets:
+  - name: dockerhub-creds
 nameOverride: ""
 fullnameOverride: ""
 
@@ -28,7 +29,7 @@ securityContext:
   capabilities:
     drop:
       - ALL
-  readOnlyRootFilesystem: false   
+  readOnlyRootFilesystem: false
   runAsNonRoot: true
 
 service:
